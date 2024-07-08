@@ -14,10 +14,10 @@ public class TablaDeDispersion {
     int actuales;
     
     public TablaDeDispersion(){
-        this.total = 10;
+        this.total = 20;
         this.actuales = 0;
-        this.articulos = new Articulo[10];
-        for (int i = 0; i < 10; i++) {
+        this.articulos = new Articulo[20];
+        for (int i = 0; i < 20; i++) {
             this.articulos[i] = null;
         }
     }
@@ -26,7 +26,7 @@ public class TablaDeDispersion {
         int valor = 21;
         //Convertimos cada caracter del titulo en un numero usando su valor ASCII
         for (Character c : titulo.toCharArray()){
-            valor = c ^ valor + valor; 
+            valor = (valor * 31 + c) % 127; 
         }
         return valor % total;
     }
@@ -34,29 +34,61 @@ public class TablaDeDispersion {
     
     public void insertar(Articulo articulo){
         //Usamos la funcion de hash para calcular el indice que tendra el articulo
-        int hash = this.hash(articulo.getTitulo());
+        int hash = this.hash(articulo.getTitulo().toLowerCase());
         
         //Validamos si ya hay un articulo en esa posicion
         if(this.articulos[hash] != null){
             //Comprobamos que el articulo que esta en esa posicion no sea igual al que queremos insertar
-            if(this.articulos[hash].getTitulo().equals(articulo.getTitulo())){
+            if(this.articulos[hash].getTitulo().toLowerCase().equals(articulo.getTitulo().toLowerCase())){
                 return;
             }
             else{
                 //Buscamos una posicion vacia eb el arreglo para insertarlo, y seguimos buscando que no este ya insertado
                 while(this.articulos[hash] != null){
                     //Si los articulos tienen el mismo titulo retornamos para no insertarlo otra vez
-                    if(this.articulos[hash].getTitulo().equals(articulo.getTitulo())){
+                    if(this.articulos[hash].getTitulo().toLowerCase().equals(articulo.getTitulo().toLowerCase())){
                         return;
                     }
                     //Movemos el hash
-                    hash = (hash * 21 ) % this.total;
+                    hash+= 1;
+                    if(hash == this.total){
+                        hash = 0;
+                    }
                 }
             }
         }
         //Al llegar a este punto, podremos insertar en la posicion hash con la seguridad de que estara vacias
         this.articulos[hash] = articulo;
     }
+    
+    public Articulo busquedaPorTitulo(String titulo){
+         int hash = this.hash(titulo);
+        
+        //Validamos si ya hay un articulo en esa posicion
+        if(this.articulos[hash] != null){
+            //Comprobamos que el articulo que esta en esa posicion no sea igual al que queremos insertar
+            if(this.articulos[hash].getTitulo().toLowerCase().equals(titulo)){
+                return this.articulos[hash];
+            }
+            else{
+                //Buscamos una posicion vacia eb el arreglo para insertarlo, y seguimos buscando que no este ya insertado
+                while(this.articulos[hash] != null){
+                    //Si los articulos tienen el mismo titulo retornamos para no insertarlo otra vez
+                    if(this.articulos[hash].getTitulo().toLowerCase().equals(titulo)){
+                        return this.articulos[hash];
+                    }
+                    hash += 1;
+                    if(hash == this.total){
+                        hash = 0 ;
+                    }
+                    //Movemos el hash
+                    
+                }
+            }
+        }
+        //Al llegar a este punto, podremos insertar en la posicion hash con la seguridad de que estara vacias
+        return null;
+}
     
     public Articulo[] busquedaPorAutor(String autor){
         Articulo[] portafolio = new Articulo[this.total];
@@ -67,7 +99,7 @@ public class TablaDeDispersion {
                 //Por cada articulo, recorremos el arreglo de sus autores
                 for (int j = 0; j < this.articulos[i].getAutores().length; j++) {
                     //Si el autor es igual al que estamos buscando, agregamos al articulo al arreglo y pasamos al siguiente
-                    if(this.articulos[i].getAutores()[j].equals(autor)){
+                    if(this.articulos[i].getAutores()[j].toLowerCase().equals(autor)){
                         portafolio[indiceP] = this.articulos[i];
                         indiceP += 1;
                         break;
@@ -80,4 +112,20 @@ public class TablaDeDispersion {
         return portafolio;
     }
     
+    public String autores(){
+        String autores = "";
+        for (int i = 0; i < this.total; i++) {
+            try{
+                for (int j = 0; j < this.articulos[i].getAutores().length; j++) {
+                    if(!autores.contains(this.articulos[i].getAutores()[j])){
+                        autores += this.articulos[i].getAutores()[j] + ";";
+                    }
+                }
+            }catch(Exception e){
+                
+            }
+        }
+        autores = autores.substring(0, autores.length() - 1);
+        return autores;
+    }
 }

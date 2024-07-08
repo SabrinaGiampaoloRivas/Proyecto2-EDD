@@ -79,5 +79,9 @@ public class TablaDeDispersion {
         //Regresamos el arreglo de todos los articulos escritos por el autor
         return portafolio;
     }
+
+    Object busquedaPorTitulo(String toLowerCase) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }

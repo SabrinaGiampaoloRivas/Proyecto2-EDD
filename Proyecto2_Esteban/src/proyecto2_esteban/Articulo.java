@@ -71,7 +71,7 @@ public class Articulo {
             for (int j = 0; j < this.resumen.length(); j++) {
                 //Primero verificamos si el caracter del resumen j es igual al caracter de la PC indice_pc
                 //Si son diferentes, regresamos el indice_pc a la posicion 0
-                if(this.palabras_claves[i].charAt(indice_pc) != this.resumen.charAt(j)){
+                if(!String.valueOf(this.palabras_claves[i].charAt(indice_pc)).toLowerCase().equals(String.valueOf(this.resumen.charAt(j)).toLowerCase())){
                     indice_pc = 0;
                 }
                 /*Ahora volvemos a comprobar si el caracter del resumen actual es igual al caracter acual de la PC
@@ -88,7 +88,7 @@ public class Articulo {
                 En cambio, si comprobamos de nuevo si la letra actual del resumen es igual a la letra acual de la PC(que ahora
                 seria la primera) se daria cuenta que son iguales.
 */
-                if(this.palabras_claves[i].charAt(indice_pc) == this.resumen.charAt(j)){
+                if(String.valueOf(this.palabras_claves[i].charAt(indice_pc)).toLowerCase().equals(String.valueOf(this.resumen.charAt(j)).toLowerCase())){
                     indice_pc += 1;
                 }
                 //Si indice PC llega a ser igual a la longitud de la palabra querra decir que ya encontro todas sus letras,
